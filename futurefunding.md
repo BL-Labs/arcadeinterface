@@ -10,3 +10,9 @@ Keep an eye also on AHRC Digital Transformations call in the autumn.
 
 For small stuff: 
 * Event sponsorship https://community.github.com/
+
+
+Academics in crowdsourcing and gaming
+* Kevin Kee, History, University of Ottawa
+* Kirsten Cater, Computer Science, University of Bristol
+* Mia Ridge, History, Open University
