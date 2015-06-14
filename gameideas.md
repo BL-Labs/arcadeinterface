@@ -1,5 +1,33 @@
 Game Ideas posted by Adam. Please edit / comment.
 
+##Working Title: Tetris Game
+
+###Collection Used:		
+BL Flickr Images
+
+###Collection Size:		
+1 million images, 50gb?
+
+###Interaction
+ Images fall from the top of the screen, randomly from along the y axis. They fall at a stable rate until they hit the bottom or another block. The images are blacked out while falling - coloured shapes the size of the original image (or scaled, but the same shape). The game is over when the blocks hit the top of the screen. The rate of fall increases over time, making the game more difficult. This is effectively like tetris, but without the rotation options, and the player does not control the falling images.
+ 
+ Instead, the player controls a little dude at the bottom of the screen. The dude runs along the bottom y axis, and when he gets to a block, the image behind it appears in a zoom window on the right of the screen, so the player can see the image at a decent size. Their job is to classify it based on one of three criteria (person, place, thing, neither, etc). Once classified, the block disappears and the remaining blocks resettle based on gravity. The player then has to run to the next blocks and do the same.
+ 
+ There could also be additional items that fall from the top of the scree. Eg, stars to clear the whole screen, bombs that damage the 'health' of the player if he is too near when it lands. Hearts to repair health. 1-ups for extra lives, etc.
+ 
+###Validation	
+
+Images appear more than once during the game. If you classify them differently, you die / lose health. That prevents people from constantly hitting the same classification button over and over. There will also be 50 known images for each category, so if the person gets those wrong, again they die / lose health. Once an image has been classified on the machine 10 times in the same way, it joins the 'control' group. Images that prove contentious and have different classifications by different users, will not be used for control and will be removed from the game unless a clear preference over time develops.
+
+
+###Why this is useful	
+It helps classify images at a high level.
+
+###Why this is fun	
+It draws on the fun of tetris, and as it continues to speed up, is challenging. It also requires the user to make choices about the content quickly, as well as choices about the little man (which block to tackle next). Their decisions affect their progress in the game. Unlike most crowdsourcing activities, you can lose / die in this game, which I believe actually makes it a game.
+
+---
+
 ##Working Title: 		Tinder Image Classifier
 
 ###Collection Used:		
