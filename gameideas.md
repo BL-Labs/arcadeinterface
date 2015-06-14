@@ -1,5 +1,28 @@
 Game Ideas posted by Adam. Please edit / comment.
 
+##Working Title: Mario A/B Decision Game
+
+###Collection Used:		
+BL Flickr Images
+
+###Collection Size:		
+1 million images, 50gb?
+
+###Interaction
+A simple side scroller game (like the Phaser.io tutorial), with a little dude who runs around / swims / flies through short levels, avoiding obstacles like the Mario Koopas (but maybe with heads taken from the image collection?), spikes, pits, etc. At each screen there's a decision to make (eg, one of two doors to go through / pipes to go down). The player must decide which option is 'correct' based on an image from the Flickr colleciton. They're told to take door A, for example, if the image contains a human face, or door B if it does not. 
+
+###Validation	
+For most of the images, we don't actually know if A or B is the correct answer. But there are a few control images that we do know the answer (including the LAST decision). To beat the game / level, the player has to get all of the control decisions correct and avoid the obstacles. Data is collected on the non-control decisions and validated by cross-player agreement over time.
+
+
+###Why this is useful	
+It helps classify images at a high level.
+
+###Why this is fun	
+This is effectively Mario. The enemies to avoid make the levels challenging, and the players will be under the impression that all of their door decisions matter, making them feel like they are making choices that affect their progress in the game. Only some of them will matter, but they won't know that because if they get the last one wrong they can't win.
+
+---
+
 ##Working Title: Tetris Game
 
 ###Collection Used:		
