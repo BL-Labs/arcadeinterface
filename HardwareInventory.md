@@ -20,10 +20,10 @@ Cabaret Cabinet:
 * 1 24-26" monitor / tv (£60-120)
 * Cabinet flatpack (£170)
 * Artwork (£???)
-* Artwork printing (£???750)
+* Artwork printing (£???350)
 * Construction and installation (£180)
 
-Total Must Have: £495-£555 + 750 artwork
+Total Must Have: £495-£555 + 350 artwork
 
 Optional extras
 * Topper (£?)
@@ -38,11 +38,11 @@ Cocktail Table
 * 1 24-26" monitor / tv (£60-120)
 * Cocktail Table flatpack (£280)
 * Artwork (£???)
-* Artwork printing (£???750)
+* Artwork printing (£???350)
 * Construction and installation (£180)
 
-Total Must Have: £626-686 + 750 artwork
+Total Must Have: £626-686 + 350 artwork
 
 ---
 
-Total estimate: £2,741
+Total estimate: £1,941
