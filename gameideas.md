@@ -6,10 +6,12 @@ Game Ideas posted by Adam. Please edit / comment.
 BL Flickr Images
 
 ###Collection Size:		
-1 million images, 50gb?
+1 million images, 50gb? (530GB actually)
 
 ###Interaction
 A simple side scroller game (like the Phaser.io tutorial), with a little dude who runs around / swims / flies through short levels, avoiding obstacles like the Mario Koopas (but maybe with heads taken from the image collection?), spikes, pits, etc. At each screen there's a decision to make (eg, one of two doors to go through / pipes to go down). The player must decide which option is 'correct' based on an image from the Flickr colleciton. They're told to take door A, for example, if the image contains a human face, or door B if it does not. 
+
+    Could use an on-rails type of gameplay? eg look at bittrip runner for example?
 
 ###Validation	
 For most of the images, we don't actually know if A or B is the correct answer. But there are a few control images that we do know the answer (including the LAST decision). To beat the game / level, the player has to get all of the control decisions correct and avoid the obstacles. Data is collected on the non-control decisions and validated by cross-player agreement over time.
@@ -145,6 +147,8 @@ BL Flickr Images
 ###Interaction	
 Users are shown 3 images randomly drawn from the collection (perhaps those classified above by level of photorealism) and are asked to guess which one is the oldest / newest.
 
+    This is great. Simple to implement, a nice challenge and should result in some interesting data to analyse about the level of illustration quality and to see if it coorelates with any metadata we have on them (publisher, cost maybe, etc)
+
 ###Metadata Collected:	
 Data on how well the users are able to judge the relative age of an image.
 
@@ -184,6 +188,8 @@ Range of possibilities:
 
 ###Validation	
 It’s possible to extract a lot of this stuff semi-automatically, but the human would be validating that semi-automatic work, and might also find additional details missed by the other process.
+
+    Might be that the joystick lets people switch between text that is highlighted as a useful noun-phrase.
 
 
 ###Why this is useful	
