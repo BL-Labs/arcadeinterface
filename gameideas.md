@@ -200,6 +200,34 @@ Not sure it is. Non-keyboard text-based crowdsourcing.
 
 ----
 
+###Working Title:
+Slot machine Matchup
+
+###Collection Used:
+Images with contextual information about what they contain (eg tagged imgs from Flickr)
+
+###Collection Size:
+~160,000 (although a large chunk, ~54k of this is maps)
+
+###Interaction:
+Presented like a three reel slot machine, with three hold buttons underneath them. The left and center reels have already been held, each showing an image of a type (eg map). A variety of images 'spin' in the rightmost wheel, and the user has to hit the 'hold' button to stop the wheel on the matching image.
+
+As they progress, the wheel spins faster and faster. The driver would be to make a big deal of the high score, and we can block the usual three letter suspects and let them enter their initials.
+
+###Metadata Collected:	
+Confirmation that images from a given set match, at least visually. Potential to gain more metadata by presenting a list of images, with one definite correct answer (we'll need to make a golden set of each type we use) with the maybe's (images tagged by users, but not in the golden set.)
+
+###Validation:
+They progress if they hit a match, fail if they don't. Each player can have 3 respins, and are given the choice when they have held an image, in case they didn't hold the right one. Only told if it is correct if they don't or cannot respin.
+
+###Why this is useful:
+Tag validation.
+
+###Why this is fun:
+Slot machine presentation lets us use colours and motion to feedback. With a headset, we can work in fun audio illusions (eg Shepard’s ascending tones) to help ramp up the tension. Increasing speed each level is also useful.
+
+----
+
 (Template:)
 ###Working Title:
 
