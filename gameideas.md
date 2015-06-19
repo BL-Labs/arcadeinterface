@@ -197,3 +197,22 @@ Fits with my research needs to structure this data, and also tests a way to work
 
 ###Why this is fun	
 Not sure it is. Non-keyboard text-based crowdsourcing.
+
+----
+
+(Template:)
+###Working Title:
+
+###Collection Used:
+
+###Collection Size:
+
+###Interaction:
+
+###Metadata Collected:	
+
+###Validation:
+
+###Why this is useful:
+
+###Why this is fun:
