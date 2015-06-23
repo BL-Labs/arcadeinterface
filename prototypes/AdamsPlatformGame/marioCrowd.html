@@ -18,7 +18,7 @@
 // Variable scope on 'score' not working when the baddie hits the lava. It overwrites the score entirely.
 
 
-var game = new Phaser.Game(1200, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(1200, 850, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -31,6 +31,9 @@ function preload() {
     game.load.image('flickrImage', 'assets/flickr.png');
     game.load.image('paper', 'assets/parchment_alpha_tiny.png');
     game.load.image('door', 'assets/castledoors_0.png');
+    game.load.spritesheet('box', 'assets/box.png', 58, 58);
+    //game.load.image('goldKey', 'assets/secret_key_1.png');
+    game.load.image('goldenkey', 'assets/secret_key_1.png');
 
 
 }
@@ -41,8 +44,8 @@ var platforms;
 var cursors;
 
 var stars;
-var parchments;
 var doors;
+var box;
 
 var score = 0;
 var starCount = 0;
@@ -50,6 +53,9 @@ var scoreText;
 var centredText;
 var lava;
 var baddieDirection = 'left';
+var parchmentStatus = 0;
+var keyVisible = 0;
+var doorsVisible = 0;
 
 function create() {
 
@@ -57,6 +63,7 @@ function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     //  A simple background for our game
+    game.stage.backgroundColor = '#f1e1da';
     game.add.sprite(0, 0, 'sky');
     sky = game.add.tileSprite(0, 0, game.stage.bounds.width, game.cache.getImage('sky').height, 'sky');
 
@@ -66,22 +73,29 @@ function create() {
 
     lava = game.add.group();     // Create lava pit
     lava.enableBody = true;
-    lava.create(800, 590, 'lava');
+    lava.create(800, 570, 'lava');
     
-    var ground = platforms.create(0, game.world.height - 64, 'ground'); // Here we create the ground.
-    ground.scale.setTo(2, 2); //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+    var ground = platforms.create(0, game.world.height - 314, 'ground'); // Here we create the ground.
+    ground.scale.setTo(3, 2); //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
 
     //  This stops it from falling away when you jump on it
     ground.body.immovable = true;
-
-
-    var ledge = platforms.create(400, 400, 'ground');     //  Now let's create 2 ledges
+    var ledge = platforms.create(400, 370, 'ground');     //  Now let's create 2 ledges
     ledge.body.immovable = true;
     ledge = platforms.create(-150, 250, 'ground');
     ledge.body.immovable = true;
     
+    // Add box to hit with your head
+    var boxes = game.add.group();
+    boxes.enableBody = true;
+    
+    //box = boxes.create(70, 120, 'box');
+    box = boxes.create(70, 120, 'box');
+    box.body.immovable = true;
+    box.animations.add('change', [0, 1], 10, false);
+    
     // The player and its settings
-    player = game.add.sprite(32, game.world.height - 150, 'dude');
+    player = game.add.sprite(32, game.world.height - 400, 'dude');
     game.physics.arcade.enable(player); //  We need to enable physics on the player
     player.body.bounce.y = 0.2;     //  Player physics properties. Give the little guy a slight bounce.
     player.body.gravity.y = 300;
@@ -90,7 +104,7 @@ function create() {
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
     // Add the baddie
-    baddie = game.add.sprite(770, game.world.height - 150, 'enemy');
+    baddie = game.add.sprite(770, game.world.height - 400, 'enemy');
     game.physics.arcade.enable(baddie);
     baddie.body.bounce.y = 0.2;
     baddie.body.gravity.y = 300;
@@ -98,29 +112,24 @@ function create() {
     baddie.animations.add('left', [0, 1], 4, true);
     baddie.animations.add('right', [2, 3], 4, true);
 
-    //  Finally some stars to collect [should change stars to picture fragments -ac]
+    //  Finally some stars to collect
     stars = game.add.group();
     stars.enableBody = true;    //  We will enable physics for any star that is created in this group
-    for (var i = 0; i < 12; i++)     //  Here we'll create 12 of them evenly spaced apart
+    for (var i = 0; i < 9; i++)     //  Here we'll create 9 of them evenly spaced apart
     {
-        var star = stars.create(i * 70, 0, 'star');         //  Create a star inside of the 'stars' group
+        var star = stars.create(i * 70 + 200, 0, 'star');         //  Create a star inside of the 'stars' group
 	starCount = i + 1;
         star.body.gravity.y = 300;         //  Let gravity do its thing
         star.body.bounce.y = 0.7 + Math.random() * 0.2;         //  This just gives each star a slightly random bounce value
 
     } 
 
-    // Add in parchment(s)
-    parchment = game.add.sprite(70, 0, 'paper');
-    game.physics.arcade.enable(parchment);
-    parchment.body.gravity.y = 300;
-    parchment.body.bounce.y = 0.7 + Math.random() *0.2;
-
     //  The score
     scoreText = game.add.text(16, 16, 'score: 0\nSTARS REMAINING: ' + starCount, { fontSize: '32px', fill: '#000' });
 
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
+    
     
 }
 
@@ -133,30 +142,65 @@ function update() {
     game.physics.arcade.collide(player, platforms);
     game.physics.arcade.collide(stars, platforms);
     game.physics.arcade.collide(baddie, platforms);
-    game.physics.arcade.collide(parchment, platforms);
+    if (parchmentStatus == 1) { // if the parchment has been found, check for collisions.
+	game.physics.arcade.collide(parchment, platforms);
+	game.physics.arcade.collide(parchment, box);
+    }
+    if (keyVisible == 1) {
+	game.physics.arcade.collide(key, platforms);
+    }
+
+
     game.physics.arcade.collide(doors, platforms);
+    game.physics.arcade.collide(box, player, boxOpen); // check if player bumps into box
 
     // Make baddie walk around and change directions when he hits the edge of the world.
     if (baddieDirection == 'left') {
-	baddie.body.velocity.x = -130;
+	baddie.body.velocity.x = -70;
 	baddie.animations.play('left');
 	if (baddie.body.x == 0) {
 	    baddieDirection = 'right';
-	    baddie.body.velocity.x = 130;
+	    baddie.body.velocity.x = 70;
 	    baddie.animations.play('right');
 	}
     } else {
-	baddie.body.velocity.x = 130;
+	baddie.body.velocity.x = 70;
 	baddie.animations.play('right');
     }
     
     // Checking for various death/collision conditions
+
     game.physics.arcade.overlap(baddie, lava, baddieDie, null, this); // if baddie falls in lava he dies
     game.physics.arcade.overlap(player, stars, collectStar, null, this); //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     game.physics.arcade.overlap(player, baddie, die, null, this); // Check to see if player touches baddie. If he does, he dies.
-    game.physics.arcade.overlap(player, lava, die, null, this); // Checks to see if player overlaps with the lava. If he does, he dies.
-    game.physics.arcade.overlap(player, parchment, collectParchment, null, this); //check if player finds parchment
+    //game.physics.arcade.overlap(player, lava, die, null, this); // Checks to see if player overlaps with the lava. If he does, he dies.
     game.physics.arcade.overlap(player, doors, doorEntry, null, this); //check if player enters a door
+    if (parchmentStatus == 1) {
+	game.physics.arcade.overlap(player, parchment, collectParchment, null, this); //check if player finds parchment
+    }
+    if (keyVisible == 1) { // if the key has been found, check for collisions.
+	game.physics.arcade.overlap(player, key, collectKey, null, this);
+    }
+    
+    if (keyVisible == 2 && parchmentStatus == 2 & doorsVisible == 0) {
+	// Reveal secret platforms and doors and instructions.
+	ledge = platforms.create(900, 200, 'ground');
+	ledge.body.immovable = true;
+	ledge = platforms.create(900, 450, 'ground');
+	ledge.body.immovable = true;
+	
+	doors = game.add.group();
+        doors.enableBody = true; 
+	
+	var doorway = doors.create(1130, 100, 'door');
+	game.physics.arcade.enable(doorway);
+	doorway.body.gravity.y = 300;
+	
+	doorway = doors.create(1130, 350, 'door');
+	game.physics.arcade.enable(doorway);
+	doorway.body.gravity.y = 300;
+	doorsVisible = 1;
+    }
 
     //  Reset the players velocity (movement)
     player.body.velocity.x = 0;
@@ -184,38 +228,54 @@ function update() {
     }
     
     //  Allow the player to jump if they are touching the ground.
-    if (cursors.up.isDown && player.body.touching.down)
-    {
+    if (cursors.up.isDown && player.body.touching.down) {
         player.body.velocity.y = -350;
     }
+    
+    
+    /* code for swimming
+    var swimming = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    swimming.onDown.add(swim, this); */
 
+
+}
+
+function swim() {
+	player.body.velocity.y = -150;
+}
+
+function boxOpen(box, player, boxes) {
+	
+	if (box.body.touching.down && parchmentStatus == 0) {
+		box.animations.play('change'); // change colour of the box once it's been hit
+		
+		parchment = game.add.sprite(70, 60, 'paper'); // make the parchment appear.
+		game.physics.arcade.enable(parchment);
+		parchment.body.gravity.y = 300;
+		parchmentStatus = 1;
+
+	}
 }
 
 function collectParchment (player, parchment) {
 	parchment.kill();
+	parchmentStatus = 2;
 	score += 75;
 	scoreText.text = 'Score: ' + score + '\nSTARS REMAINING: ' + starCount;
-	centredText = game.add.text(350, 290, 'If the parchment contains a face', {fontSize: '60px', fill: '000' });
-	var highRoad = game.add.text(720, 170, 'take the high road -->', {fontSize: '60px', fill: '000' });
-	var lowRoad = game.add.text(720, 420, 'otherwise, take the low road -->', {fontSize: '60px', fill: '000' });
+	centredText = game.add.text(350, 700, 'If the parchment contains a face\ntake the high road.\notherwise, take the low road.', {fontSize: '60px', fill: '000' });
+	var highRoad = game.add.text(920, 170, 'high road -->', {fontSize: '60px', fill: '000' });
+	var lowRoad = game.add.text(920, 420, 'low road -->', {fontSize: '60px', fill: '000' });
         
-	// Reveal Flickr image and secret platforms and doors.
-	game.add.sprite(16, 275, 'flickrImage');
-	ledge = platforms.create(900, 200, 'ground');
-	ledge.body.immovable = true;
-	ledge = platforms.create(900, 450, 'ground');
-	ledge.body.immovable = true;
+	// Reveal Flickr image
+	game.add.sprite(16, 630, 'flickrImage');
 	
-	doors = game.add.group();
-        doors.enableBody = true; 
+}
+
+function collectKey(player, key) {
+	key.kill();
+	keyVisible = 2;
 	
-	var doorway = doors.create(1130, 100, 'door');
-	game.physics.arcade.enable(doorway);
-	doorway.body.gravity.y = 300;
-	
-	doorway = doors.create(1130, 350, 'door');
-	game.physics.arcade.enable(doorway);
-	doorway.body.gravity.y = 300;
+
 }
 
 
@@ -232,13 +292,17 @@ function collectStar (player, star) {
 	scoreText.text = 'Score: ' + score + '\nSTARS REMAINING: ' + starCount;
     } else {
 	scoreText.text = 'Score: ' + score + '\nSTARS REMAINING: ' + starCount;
+	key = game.add.sprite(1100, 480, 'goldenkey');
+	game.physics.arcade.enable(key);
+	key.body.gravity.y = 300;
+	keyVisible = 1;
     }
 }
 
 // kills player if death conditions met.
 function die (centredText) {
-	centredText = game.add.text(550, 200, {fontSize: '60px', fill: '000' });
-	centredText.text = 'GAME OVER! \nyou should not \nhave gone over there.';
+	centredText = game.add.text(550, 700);
+	centredText.text = 'GAME OVER!';
 
 	player.kill();
 }
@@ -263,11 +327,10 @@ function doorEntry(player, door) {
 
 // outputs variable details for little dude.
 function render() {
-
+	//game.debug.text("Time until event: " + game.time.events.duration, 32, 32);
     //game.debug.bodyInfo(player, 32, 32);
-
     //game.debug.body(player);
-    //game.debug.text(scoreText, 132, 32);
+    game.debug.text(keyVisible, 132, 32);
     //game.debug.text(scoreText);
 
 }
