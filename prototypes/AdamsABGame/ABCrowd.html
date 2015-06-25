@@ -1,0 +1,169 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+    <title>Phaser - Making your first game, part 9</title>
+	<script type="text/javascript" src="js/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+
+//var game = new Phaser.Game(1200, 850, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(1200, 850, Phaser.AUTO, 'test', null, false, false);
+var BasicGame = function (game) {};
+
+BasicGame.Boot = function (game) {};
+
+
+
+var centredText;
+var newImageText;
+var cursors;
+var platforms, leftWall, rightWall;
+var leftCounter = 0;
+var rightCounter = 0;
+
+var imageWidth;
+
+var timer, timerEvent, text;
+var decisionFlag = 0;
+var imageID = 1;
+var missedImages = 0;
+
+
+BasicGame.Boot.prototype = {
+	preload: function () {
+	    game.load.image('sky', 'assets/sky.png');
+	    game.load.image('ground', 'assets/platform.png');
+	    game.load.image('flickrImage', 'assets/flickr.png');
+	    game.load.image('ground', 'assets/platform.png');
+	    game.load.image('wall', 'assets/sideWall.png');
+	},
+
+	create: function () {
+		timer = game.time.create(); // Create a custom timer
+		timerEvent = timer.add(Phaser.Timer.MINUTE * 0 + Phaser.Timer.SECOND * 02, this.endTimer, this);
+		timer.start(); // Start the timer
+		
+		game.physics.startSystem(Phaser.Physics.ARCADE); //  enable the Arcade Physics system
+		game.stage.backgroundColor = '#000'; // load background
+		game.add.sprite(0, 0, 'sky');
+		sky = game.add.tileSprite(0, 0, game.stage.bounds.width, game.cache.getImage('sky').height, 'sky');
+		
+		platforms = game.add.group();     //  The platforms group contains the ground
+		platforms.enableBody = true;     //  enable physics for any object that is created in this group
+		var ground = platforms.create(0, game.world.height, 'ground'); // Here we create the ground.
+		ground.scale.setTo(3, 2); //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+		ground.body.immovable = true; //  stop ground from falling away when you jump on it
+		
+		leftWall = platforms.create(50, 0, 'wall'); // create walls on left and right side for collision testing
+		leftWall.body.immovable = true;
+		rightWall = platforms.create(1150, 0, 'wall');
+		rightWall.body.immovable = true; 
+		
+		flickrImage = game.add.sprite(-100, -100, 'flickrImage'); // preload the image so I can calculate the width
+		var imageWidth = flickrImage.width; // used to get the image in the middle of the screen when it falls.
+		flickrImage.kill(); // this is a waste of memory, so looking for a better solution.
+		
+		flickrImage = game.add.sprite(game.world.centerX - (imageWidth / 2), 0, 'flickrImage'); // drop the initial image
+		game.physics.arcade.enable(flickrImage);
+		flickrImage.body.gravity.y = 500;
+		
+		//Instructional text
+		var leftInstruction = game.add.text(200, 200, '<-- Has a Face', {fontSize: '60px', fill: '000' });
+		var rightInstruction = game.add.text(800, 200, 'No Face -->', {fontSize: '60px', fill: '000' });
+	    
+		//  Our controls.
+		cursors = game.input.keyboard.createCursorKeys(); 
+	},
+	
+	update: function () {
+		
+		game.physics.arcade.collide(flickrImage, leftWall, killImage, null, this);
+		game.physics.arcade.collide(flickrImage, rightWall, killImage, null, this);
+		//game.physics.arcade.collide(image, platforms);
+		
+		if (timer.running) { // if there is time left on the timer
+		    //player controls. Only 1 movement allowed per image.
+			if (decisionFlag == 0 && flickrImage.body.y > 20) {
+				if (cursors.left.isDown) { // swat image to the left
+				    flickrImage.body.velocity.x = -1950;
+				    leftCounter = leftCounter + 1; // register a left swipe and count the result
+
+				    decisionFlag = 1;
+				} else if (cursors.right.isDown) { // swat image to the right
+				    flickrImage.body.velocity.x = 1950;
+				    rightCounter = rightCounter + 1; // register a right swipe and count the result
+				    decisionFlag = 1;
+				}
+			}
+		} else {
+			newImage(); // if the timer is at 0, send a new image
+			timer = game.time.create(); // create new timer and start the process over again
+			timerEvent = timer.add(Phaser.Timer.MINUTE * 0 + Phaser.Timer.SECOND * 02, this.endTimer, this);
+			timer.start();
+		}
+	    
+		
+	},
+	
+	render: function () {
+		game.debug.text("leftCounter " + leftCounter, 200, 300);
+		game.debug.text("rightCounter " + rightCounter, 900, 300);
+		game.debug.text('decisionFlag ' + decisionFlag, 300, 700);
+		game.debug.text('imageID ' + imageID, 300, 720);
+		game.debug.text('missedImages ' + missedImages, 300, 740);
+		
+		game.debug.text(this.formatTime(Math.round((timerEvent.delay - timer.ms) / 1000)), 2, 14, "#ff0"); // show countdown timer
+	},
+	endTimer: function() {
+	    // Stop the timer when the delayed event triggers
+	    timer.stop();
+	},
+	formatTime: function(s) {
+	    // Convert seconds (s) to a nicely formatted and padded time string
+	    var minutes = "0" + Math.floor(s / 60);
+	    var seconds = "0" + (s - minutes * 60);
+	    return minutes.substr(-2) + ":" + seconds.substr(-2);   
+	}
+};
+
+game.state.add('Boot', BasicGame.Boot);
+game.state.start('Boot');
+
+function newImage() {
+	if (decisionFlag == 0) {
+		missedImages = missedImages +1;
+	}
+	flickrImage = game.add.sprite(game.world.centerX -50, 0, 'flickrImage'); // Load a new image
+	game.physics.arcade.enable(flickrImage);
+	flickrImage.body.gravity.y = 500;
+	decisionFlag = 0; // reset decision flag to unlock joystick
+	imageID ++; // counter for number of images.
+}
+
+function killImage() {
+	flickrImage.kill();
+}
+
+function countLeft() {
+	flickrImage.kill();
+}	
+	
+function countRight() {
+	
+	flickrImage.kill();
+}
+
+
+</script>
+
+</body>
+</html>
