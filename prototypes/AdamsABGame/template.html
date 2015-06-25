@@ -1,0 +1,79 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+    <title>Phaser - Making your first game, part 9</title>
+	<script type="text/javascript" src="js/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+// To do
+// Variable scope on 'score' not working when the baddie hits the lava. It overwrites the score entirely.
+
+
+var game = new Phaser.Game(1200, 850, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+
+function preload() {
+
+    game.load.image('sky', 'assets/sky.png');
+
+}
+
+var platforms;
+var cursors;
+
+
+
+function create() {
+    game.physics.startSystem(Phaser.Physics.ARCADE); //  enable the Arcade Physics system
+
+    game.stage.backgroundColor = '#f1e1da'; // load background
+    game.add.sprite(0, 0, 'sky');
+    sky = game.add.tileSprite(0, 0, game.stage.bounds.width, game.cache.getImage('sky').height, 'sky');
+    
+    //  Our controls.
+    cursors = game.input.keyboard.createCursorKeys(); 
+}
+
+function update() {
+
+    //Scroll background
+    sky.tilePosition.x -= 1;
+
+    if (cursors.left.isDown)
+    {
+        //  Move to the left
+    }
+    else if (cursors.right.isDown)
+    {
+        //  Move to the right
+
+    }
+    else
+    {
+        //  Stand still
+    }
+
+
+
+}
+
+
+
+// outputs variable details for little dude.
+function render() {
+    //game.debug.text("Time until event: " + game.time.events.duration, 32, 32);
+
+}
+
+</script>
+
+</body>
+</html>
