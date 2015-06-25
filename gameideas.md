@@ -220,6 +220,14 @@ Confirmation that images from a given set match, at least visually. Potential to
     Can you expand on how we get new data? WOuldn't we have to know the answers for this to work?
 
 ###Validation:
+For each tag (portrait, heraldry, map), we should personally check a small batch of them. These are our golden set. The others that have been tagged by other people are our maybes. The third reel will have a mix of these, with the first two reels already 'held' on images from the golden set.
+
+If a player stops the reel and does not choose to respin, they are asserting that the third reel matches the first two.
+
+Edge cases: assertions when there are no respins left should be taken under caution!
+
+The difficultly of the challenge is varied by changing the proportions of golden:maybe:random-untagged on the reel, always ensuring that there is at least one correct answer on it.
+
 They progress if they hit a match, fail if they don't. Each player can have 3 respins, and are given the choice when they have held an image, in case they didn't hold the right one. Only told if it is correct if they don't or cannot respin.
 
 ###Why this is useful:
