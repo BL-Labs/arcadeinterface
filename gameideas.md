@@ -217,7 +217,7 @@ As they progress, the wheel spins faster and faster. The driver would be to make
 ###Metadata Collected:	
 Confirmation that images from a given set match, at least visually. Potential to gain more metadata by presenting a list of images, with one definite correct answer (we'll need to make a golden set of each type we use) with the maybe's (images tagged by users, but not in the golden set.)
 
- Can you expand on how we get new data? Wouldn't we have to know the answers for this to work?
+    Can you expand on how we get new data? WOuldn't we have to know the answers for this to work?
 
 ###Validation:
 They progress if they hit a match, fail if they don't. Each player can have 3 respins, and are given the choice when they have held an image, in case they didn't hold the right one. Only told if it is correct if they don't or cannot respin.
